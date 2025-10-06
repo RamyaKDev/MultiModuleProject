@@ -12,7 +12,7 @@ spring:
 # provide cloud config uri
 
  config:
-  import: configserver:http://localhost:8888
+  import: configserver:http://config-server:8888
 # profiles:
 #    active: prod,dev
 #datasource specific properties
@@ -30,7 +30,3 @@ spring:
 
 
 
-eureka:
-  client:
-    service-url:
-      default-zone: http://eureka-server

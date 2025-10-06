@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +26,10 @@ public class ProductServiceImpl implements IProductService {
 	private ModelMapper mapper;
 	@Autowired
 	private RestTemplate restTemplate;
-	
-	private final String BASEURI=
-			"http://product-inventory/inventory-service/v1/inventories";
+	@Value("${product-inventory.service.url}")
+	private String BASEURL;
+	//private final String BASEURI=
+		//	"http://product-inventory/inventory-service/v1/inventories";
 
 	
 	@Override
@@ -45,8 +47,11 @@ public class ProductServiceImpl implements IProductService {
 		inventoryDto.setStock(stock);
 		//frame the uri to call the inventory microservice
 		//using resttemplate call the appropriate method
+		String url=BASEURL.concat("/inventory-service/v1/inventories");
 		ResponseEntity<String> response=
-				restTemplate.postForEntity(BASEURI, inventoryDto, String.class);
+				restTemplate.postForEntity(url, inventoryDto, String.class);
+//		ResponseEntity<String> response=
+//				restTemplate.postForEntity(BASEURI, inventoryDto, String.class);
 		System.out.println(response.getBody());
 	}
 
@@ -140,7 +145,9 @@ public class ProductServiceImpl implements IProductService {
 		inventoryDto.setProductId(productId);
 		inventoryDto.setStock(stock);
 		System.out.println(inventoryDto);
-		restTemplate.put(BASEURI, inventoryDto);
+		String url=BASEURL.concat("/inventory-service/v1/inventories");
+		
+		restTemplate.put(url, inventoryDto);
 		
 		
 	}

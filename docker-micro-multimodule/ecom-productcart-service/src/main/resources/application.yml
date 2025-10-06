@@ -8,12 +8,9 @@ spring:
  
 ## provide cloud config uri
  config:
-  import: configserver:http://localhost:8888
+  import: configserver:http://config-server:8888
 
-eureka:
-  client:
-    service-url:
-      default-zone: http://eureka-server
+
 management:
   endpoints:
     web:

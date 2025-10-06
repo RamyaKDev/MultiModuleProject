@@ -11,7 +11,7 @@ import com.productcart.model.Product;
 
 
 
-@FeignClient(name="product-info")
+@FeignClient(name="product-info",url="${product-info.service.url}")
 public interface IProductInfoFeign {
 	@GetMapping("/info-service/v1/product-info/productid/{productId}")
 	Optional<Product> getById(@PathVariable int productId) ;

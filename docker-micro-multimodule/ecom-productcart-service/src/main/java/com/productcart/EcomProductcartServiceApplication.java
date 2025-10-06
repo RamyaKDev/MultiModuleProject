@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-@EnableDiscoveryClient
+
 public class EcomProductcartServiceApplication {
 
 	public static void main(String[] args) {

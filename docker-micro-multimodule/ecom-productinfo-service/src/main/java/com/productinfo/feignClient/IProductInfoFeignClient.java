@@ -11,7 +11,7 @@ import com.productinfo.model.Product;
 
 //this is the client for catalog service
 //pass the name of the service you want to call
-@FeignClient(name="product-catalog")
+@FeignClient(name="product-catalog",url="${product-catalog.service.url}")
 public interface IProductInfoFeignClient {
 	
 	//annotate the method to map the url of productController

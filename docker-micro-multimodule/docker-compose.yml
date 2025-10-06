@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysqlcontainer
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - ecom-network
+
+  product-catalog:
+    image: product-catalog
+    build:
+      context: ./ecom-productcatalog-service
+      dockerfile: Dockerfile
+    container_name: catalog-container
+    ports:
+      - "8084:8084"
+    depends_on:
+      - config-server
+      - mysql
+    networks:
+      - ecom-network
+
+  product-inventory:
+    image: product-inventory
+    build:
+      context: ./ecom-productinventory-service
+      dockerfile: Dockerfile
+    container_name: inventory-container
+    ports:
+      - "8087:8087"
+    depends_on:
+      - config-server
+      - mysql
+    networks:
+      - ecom-network
+
+  product-info:
+    image: product-info
+    build:
+      context: ./ecom-productinfo-service
+      dockerfile: Dockerfile
+    container_name: info-container
+    ports:
+      - "8082:8082"
+    depends_on:
+      - product-catalog
+    networks:
+      - ecom-network
+
+  product-cart:
+    image: product-cart
+    build:
+      context: ./ecom-productcart-service
+      dockerfile: Dockerfile
+    container_name: cart-container
+    ports:
+      - "8089:8089"
+    depends_on:
+      - config-server
+      - mysql
+    networks:
+      - ecom-network
+
+  gateway-api:
+    image: gateway-api
+    build:
+      context: ./ecom-gatewayapi-service
+      dockerfile: Dockerfile
+    container_name: gateway-api
+    ports:
+      - "9000:9000"
+    depends_on:
+      - product-info
+      - product-catalog
+      - product-cart
+      - product-inventory
+    networks:
+      - ecom-network
+
+  config-server:
+    image: config-server
+    build:
+      context: ./ecom-config-server
+      dockerfile: Dockerfile
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - ecom-network
+
+networks:
+  ecom-network:
+    driver: bridge

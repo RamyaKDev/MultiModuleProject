@@ -24,10 +24,14 @@ spring:
 
 # http://localhost:9000/info-service/v1/**
           - id: infoService
-            uri: lb://product-info
+            uri: http://product-info:8082
             predicates: 
               - Path= /info-service/v1/**
-           
+# http://localhost:9000/cart-service/v1/**
+          - id: cartService
+            uri: http://cart-service:8089
+            predicates: 
+              - Path= /cart-service/v1/**
 
 #add routing for the services
 # Enable CORS for Cross-Origin Acces
