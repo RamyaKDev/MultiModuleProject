@@ -34,19 +34,19 @@ public class ProductController {
 		@Value("${message}")
 		private String message;
 		
-//		http://localhost:8081/catalog-service/v1/show-message
+//		http://localhost:8084/catalog-service/v1/show-message
 		@GetMapping("/show-message")
 		String showMessage(){
 			return message.toUpperCase();
 		}
-//		http://localhost:8081/catalog-service/v1/products
+//		http://localhost:8084/catalog-service/v1/products
 	    @PostMapping("/products")
 		ResponseEntity<Void> addProduct(@RequestBody ProductDto productDto) {
 			productService.addProduct(productDto);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
 	    
-//		http://localhost:8081/catalog-service/v1/products
+//		http://localhost:8084/catalog-service/v1/products
 	    @PutMapping("/products")
 		ResponseEntity<Void> updateProduct(@RequestBody ProductDto productDto){
 			productService.updateProduct(productDto);
@@ -56,7 +56,7 @@ public class ProductController {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).headers(headers).build();
 		}
 	    
-//		http://localhost:8081/catalog-service/v1/products
+//		http://localhost:8084/catalog-service/v1/products
 	    @PatchMapping("/products/newprice")
 		ResponseEntity<Void> updateProductPrice(@RequestBody ProductPriceDto productPriceDto){
 	    	double price = productPriceDto.getPrice();
@@ -65,7 +65,7 @@ public class ProductController {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 	    
-//		http://localhost:8081/catalog-service/v1/products/stock
+//		http://localhost:8084/catalog-service/v1/products/stock
 	    @PatchMapping("/products/stock")
 		ResponseEntity<Void> updateStock(@RequestBody ProductStockDto productStockDto){
 	    	int stock= productStockDto.getStock();
@@ -74,7 +74,7 @@ public class ProductController {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		}
 	    
-//	    http://localhost:8081/catalog-service/v1/products/productId/2
+//	    http://localhost:8084/catalog-service/v1/products/productId/2
 	    @DeleteMapping("/products/productId/{productId}")
 		ResponseEntity<Void> deleteProduct(@PathVariable int productId){
 	    	productService.deleteProduct(productId);
@@ -83,7 +83,7 @@ public class ProductController {
 			return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
 	    }
 		
-//	    http://localhost:8081/catalog-service/v1/products/productId/1
+//	    http://localhost:8084/catalog-service/v1/products/productId/1
 		@GetMapping("/products/productId/{productId}")
 		ResponseEntity<ProductDto> getById(@PathVariable int productId) {
 			ProductDto productDto =  productService.getById(productId);
@@ -92,7 +92,7 @@ public class ProductController {
 			return ResponseEntity.ok().headers(headers).body(productDto);
 		}
 		
-//		 http://localhost:8081/catalog-service/v1/products
+//		 http://localhost:8084/catalog-service/v1/products
 		@GetMapping("/products")
 		ResponseEntity<List<ProductDto>> getAll(){
 			List<ProductDto> productDtos = productService.getAll();
@@ -101,7 +101,7 @@ public class ProductController {
 			return ResponseEntity.ok().headers(headers).body(productDtos);
 		}
 		
-//		 http://localhost:8081/catalog-service/v1/products/brand/Samsung
+//		 http://localhost:8084/catalog-service/v1/products/brand/Samsung
 		@GetMapping("/products/brand/{brand}")
 		ResponseEntity<List<ProductDto>> getByBrand(@PathVariable String brand){
 			List<ProductDto> productDtos = productService.getByBrand(brand);
@@ -109,7 +109,7 @@ public class ProductController {
 			headers.add("info","getting all products by brand");
 			return new ResponseEntity<List<ProductDto>>(productDtos, headers, HttpStatus.OK.value());
 		}
-//		 http://localhost:8081/catalog-service/v1/products/category?category=electronics
+//		 http://localhost:8084/catalog-service/v1/products/category?category=electronics
 		@GetMapping("/products/category")
 		ResponseEntity<List<ProductDto>> getByCategory(@RequestParam String category){
 			List<ProductDto> productDtos = productService.getByCategory(category);
@@ -118,7 +118,7 @@ public class ProductController {
 			return ResponseEntity.ok().headers(headers).body(productDtos);
 			
 		}
-//		http://localhost:8081/catalog-service/v1/products/category/Electronics/price/20000
+//		http://localhost:8084/catalog-service/v1/products/category/Electronics/price/20000
 		@GetMapping("/products/category/{category}/price/{price}")
 		ResponseEntity<List<ProductDto>> getByCatLessPrice(@PathVariable String category,@PathVariable double price){
 			List<ProductDto> productDtos = productService.getByCatLessPrice(category, price);

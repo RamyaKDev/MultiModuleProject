@@ -17,6 +17,7 @@
   <module>ecom-productcatalog-service</module>
   <module>ecom-productinfo-service</module>
   <module>ecom-productinventory-service</module>
+  <module>ecom-product</module>
   </modules>
   <properties>
 		<java.version>21</java.version>

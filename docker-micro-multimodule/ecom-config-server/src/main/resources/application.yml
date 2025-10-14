@@ -6,7 +6,7 @@ spring:
     config:
       server:
         git:
-          uri:  https://github.com/RamyaKDev/MicroserviceGitConfig.git
+          uri: https://github.com/RamyaKDev/MicroKafkaGitMulti.git
 server:
   port: 8888
 
