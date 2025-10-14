@@ -1,0 +1,23 @@
+server:
+  port: 8092
+
+
+spring:
+ application:
+  name: product-order
+ kafka:
+   producer:
+     bootstrap-servers:
+       - kafka:9092   #kafka is the service name in docker
+     key-serializer: org.apache.kafka.common.serialization.StringSerializer
+     value-serializer: org.apache.kafka.common.serializatoin.JsonSerializer
+
+
+#Feign URLs for other services
+product-cart:
+   service:
+      url: http://product-cart:8089	
+
+order:
+   topic:
+     name: orderevent-topic
