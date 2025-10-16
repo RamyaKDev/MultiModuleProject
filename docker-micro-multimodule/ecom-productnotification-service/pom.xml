@@ -7,11 +7,11 @@
 		<groupId>com.ecom</groupId>
  		<artifactId>docker-micro-multimodule</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
- 			<relativePath>../pom.xml</relativePath><!-- lookup parent from repository -->
+ 			<relativePath>../../pom.xml</relativePath><!-- lookup parent from repository -->
  	</parent>
-	<artifactId>ecom-notification-service</artifactId>
-	<name>ecom-notification-service</name>
-	<description>ecom-notification-service</description>
+	<artifactId>ecom-productnotification-service</artifactId>
+	<name>ecom-productnotification-service</name>
+	<description>ecom-productnotification-service</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -51,6 +51,10 @@
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -82,4 +86,7 @@
 		</plugins>
 	</build>
 
+	<properties>
+		<java.version>21</java.version>
+	</properties>
 </project>

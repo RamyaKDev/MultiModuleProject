@@ -6,12 +6,10 @@ spring:
  application:
   name: product-order
  kafka:
+   bootstrap-servers: kafka:9092
    producer:
-     bootstrap-servers:
-       - kafka:9092   #kafka is the service name in docker
      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-     value-serializer: org.apache.kafka.common.serializatoin.JsonSerializer
-
+     value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 #Feign URLs for other services
 product-cart:

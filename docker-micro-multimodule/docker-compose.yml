@@ -1,104 +1,159 @@
 services:
-  mysql:
-    image: mysql:8
-    container_name: mysqlcontainer
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: abcd
-      MYSQL_DATABASE: mysqlproductdb
-    networks:
-      - ecom-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pabcd"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+ mysql:
+  image: mysql:8
+  container_name: mysqlcontainer
+  ports:
+   - "3307:3306"
+  environment:
+   MYSQL_ROOT_PASSWORD: abcd
+   MYSQL_DATABASE: mysqlproductdb
+  volumes:
+   - mysql_data:/var/lib/mysql
+  networks:
+   - ecom-network
+  healthcheck:
+   test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pabcd"]
+   interval: 10s
+   timeout: 5s
+   retries: 5
 
-  product-catalog:
-    build:
-      context: ./ecom-productcatalog-service
-      dockerfile: Dockerfile
-    image: product-catalog
-    container_name: catalog-container
-    ports:
-      - "8084:8084"
-    depends_on:
-      - product-inventory
-      - config-server
-      - mysql
-    networks:
-      - ecom-network
+ product-catalog:
+  build:
+   context: ./ecom-productcatalog-service
+   dockerfile: Dockerfile
+  image: product-catalog
+  container_name: catalog-container
+  ports:
+   - "8084:8084"
+  depends_on:
+   - product-inventory
+   - config-server
+   - mysql
+  networks:
+   - ecom-network
 
-  product-inventory:
-    build:
-      context: ./ecom-productinventory-service
-      dockerfile: Dockerfile
-    image: product-inventory
-    container_name: inventory-container
-    ports:
-      - "8087:8087"
-    depends_on:
-      - config-server
-      - mysql
-    networks:
-      - ecom-network
+ product-inventory:
+  build:
+   context: ./ecom-productinventory-service
+   dockerfile: Dockerfile
+  image: product-inventory
+  container_name: inventory-container
+  ports:
+   - "8087:8087"
+  depends_on:
+   - config-server
+   - mysql
+  networks:
+   - ecom-network
 
-  product-info:
-    build:
-      context: ./ecom-productinfo-service
-      dockerfile: Dockerfile
-    image: product-info
-    container_name: info-container
-    ports:
-      - "8082:8082"
-    depends_on:
-      - product-catalog
-    networks:
-      - ecom-network
+ product-info:
+  build:
+   context: ./ecom-productinfo-service
+   dockerfile: Dockerfile
+  image: product-info
+  container_name: info-container
+  ports:
+   - "8082:8082"
+  depends_on:
+   - product-catalog
+  networks:
+   - ecom-network
 
-  product-cart:
-    build:
-      context: ./ecom-productcart-service
-      dockerfile: Dockerfile
-    image: product-cart
-    container_name: cart-container
-    ports:
-      - "8089:8089"
-    depends_on:
-      - product-info
-      - config-server
-      - mysql
-    networks:
-      - ecom-network
+ product-cart:
+  build:
+   context: ./ecom-productcart-service
+   dockerfile: Dockerfile
+  image: product-cart
+  container_name: cart-container
+  ports:
+   - "8089:8089"
+  depends_on:
+   - product-info
+   - config-server
+   - mysql
+  networks:
+   - ecom-network
 
-  gateway-api:
-    build:
-      context: ./ecom-gatewayapi-service
-      dockerfile: Dockerfile
-    image: gateway-api
-    container_name: gateway-api
-    ports:
-      - "9000:9000"
-    depends_on:
-      - product-info
-      - product-catalog
-      - product-cart
-      - product-inventory
-    networks:
-      - ecom-network
+ product-order:
+  build:
+   context: ./ecom-productorder-service
+   dockerfile: Dockerfile
+  container_name: order-container
+  ports:
+   - "8092:8092"
+  depends_on:
+   - kafka
+  networks:
+   - ecom-network
 
-  config-server:
-    build:
-      context: ./ecom-config-server
-      dockerfile: Dockerfile
-    image: config-server
-    container_name: config-server
-    ports:
-      - "8888:8888"
-    networks:
-      - ecom-network
+ product-notification:
+  build:
+   context: ./ecom-productnotification-service
+   dockerfile: Dockerfile
+  container_name: notification-container
+  ports:
+   - "8093:8093"
+  depends_on:
+   - kafka
+  networks:
+   - ecom-network
+
+ zookeeper:
+  image: confluentinc/cp-zookeeper:7.4.0
+  environment:
+   ZOOKEEPER_CLIENT_PORT: 2181
+   ZOOKEEPER_TICK_TIME: 2000
+  ports:
+   - "2181:2181"
+  networks:
+   - ecom-network
+
+ kafka:
+  image: confluentinc/cp-kafka:7.4.0
+  ports:
+   - "9092:9092"
+   - "9094:9094"
+  environment:
+   KAFKA_BROKER_ID: 1
+   KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+   KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+   KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9094
+   KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  depends_on:
+   - zookeeper
+  networks:
+   - ecom-network
+
+ gateway-api:
+  build:
+   context: ./ecom-gatewayapi-service
+   dockerfile: Dockerfile
+  image: gateway-api
+  container_name: gateway-api
+  ports:
+   - "9000:9000"
+  depends_on:
+   - product-info
+   - product-catalog
+   - product-cart
+   - product-inventory
+  networks:
+   - ecom-network
+
+ config-server:
+  build:
+   context: ./ecom-config-server
+   dockerfile: Dockerfile
+  image: config-server
+  container_name: config-server
+  ports:
+   - "8888:8888"
+  networks:
+   - ecom-network
 
 networks:
-  ecom-network:
-    driver: bridge
+ ecom-network:
+  driver: bridge
+
+volumes:
+ mysql_data:

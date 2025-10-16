@@ -18,6 +18,7 @@
   <module>ecom-productinfo-service</module>
   <module>ecom-productinventory-service</module>
  <module>ecom-productorder-service</module>
+ <module>ecom-productnotification-service</module>
   </modules>
   <properties>
 		<java.version>21</java.version>
